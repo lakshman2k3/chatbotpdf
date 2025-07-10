@@ -8,7 +8,11 @@ from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
-
+import google.generativeai as genai
+genai.configure(api_key=api_key)
+models = genai.list_models()
+for model in models:
+    print(model.name, model.supported_generation_methods)
 # Load environment variables
 load_dotenv()
 
@@ -46,7 +50,7 @@ def get_conversational_chain():
 
     Answer:
     """
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
+    model = ChatGoogleGenerativeAI(model="models/gemini-pro", temperature=0.3)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
