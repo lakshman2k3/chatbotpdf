@@ -8,11 +8,7 @@ from langchain.vectorstores import FAISS
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
-import google.generativeai as genai
-genai.configure(api_key="AIzaSyAJcPhBYyErbwNWqM6eUH0nDXdHBLMSi9Q")
-models = genai.list_models()
-for model in models:
-    print(model.name, model.supported_generation_methods)
+
 # Load environment variables
 load_dotenv()
 
@@ -21,6 +17,7 @@ api_key = os.getenv("GOOGLE_API_KEY")
 if not api_key:
     st.error("API key is not set. Please check your .env file.")
     st.stop()
+
 genai.configure(api_key=api_key)
 
 def get_pdf_text(pdf_docs):
@@ -50,7 +47,7 @@ def get_conversational_chain():
 
     Answer:
     """
-    model = ChatGoogleGenerativeAI(model="models/gemini-pro", temperature=0.3)
+    model = ChatGoogleGenerativeAI(model="models/gemini-pro", temperature=0.3)  # ✅ Fixed model name
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
@@ -70,7 +67,7 @@ def user_input(user_question):
 
 def main():
     st.set_page_config(page_title="Chat PDF", page_icon="📄")
-    st.header("Chat with PDF using Gemini💁")
+    st.header("Chat with PDF using Gemini 💁")
 
     user_question = st.text_input("Ask a Question from the PDF Files")
 
